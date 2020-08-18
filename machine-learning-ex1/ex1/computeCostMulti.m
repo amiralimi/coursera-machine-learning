@@ -13,7 +13,11 @@ J = 0;
 % Instructions: Compute the cost of a particular choice of theta
 %               You should set J to the cost.
 
+h = X * theta;
+errors = h - y;
+squaredErrors = errors' * errors;
 
+J = (1/(2*m)) * squaredErrors;
 
 
 
