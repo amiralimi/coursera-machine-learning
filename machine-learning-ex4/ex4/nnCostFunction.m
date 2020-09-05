@@ -68,21 +68,44 @@ for i = 1 : num_labels
     labeled_y((y==i), i) = 1;
 endfor
 
-X = [ones(m, 1) X];
-a1 = sigmoid(X * Theta1');
+Z1 = [ones(m, 1) X];
+A1 = sigmoid(Z1 * Theta1');
 
-a1 = [ones(m,1) a1];
-a2 = sigmoid(a1 * Theta2');
+A1 = [ones(m,1) A1];
+A2 = sigmoid(A1 * Theta2');
 
-J = 1 / m * sum(sum(-labeled_y .* log(a2) - (1 - labeled_y) .* log(1 - a2)));
+J = 1 / m * sum(sum(-labeled_y .* log(A2) - (1 - labeled_y) .* log(1 - A2)));
 
 J += lambda / (2 * m) * sum(sum(Theta1(:, 2 : end) .^ 2));
 J += lambda / (2 * m) * sum(sum(Theta2(:, 2 : end) .^ 2));
 
 
+for t = 1 : m 
+    
+    a1 = X(t, :)';
+    a1 = [1; a1];
+    z2 = Theta1 * a1;
+    a2 = sigmoid(z2);
 
+    a2 = [1; a2];
+    z3 = Theta2 * a2;
+    a3 = sigmoid(z3);
 
+    delta3 = a3 - labeled_y(t, :)';
 
+    delta2 = Theta2' * delta3 .* (a2 .* (1 - a2));
+    delta2 = delta2(2:end);
+
+    Theta2_grad += delta3 * a2';
+    Theta1_grad += delta2 * a1';
+
+endfor
+
+Theta1_grad /= m;
+Theta2_grad /= m;
+
+Theta1_grad(:, 2:end) += (lambda / m) * Theta1(:, 2:end);
+Theta2_grad(:, 2:end) += (lambda / m) * Theta2(:, 2:end);
 
 
 % -------------------------------------------------------------
