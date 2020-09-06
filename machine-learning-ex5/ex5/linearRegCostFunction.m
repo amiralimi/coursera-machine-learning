@@ -20,14 +20,19 @@ grad = zeros(size(theta));
 %
 
 
+% cost function
+H = X * theta;
+error = H - y;
+J = 1 / (2 * m) * error' * error;
+
+% cost regularization
+
+J += lambda / (2 * m) * theta(2 : end)' * theta(2 : end);
 
 
-
-
-
-
-
-
+% gradient
+grad = 1 / m * X' * error;
+grad(2 : end) += lambda / m * theta(2:end);
 
 
 % =========================================================================
