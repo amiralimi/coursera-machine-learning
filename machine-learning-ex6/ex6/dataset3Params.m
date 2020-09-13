@@ -24,9 +24,29 @@ sigma = 0.3;
 %
 
 
+steps = [0.01 0.03 0.1 0.3 1 3 10 30];
+len = size(steps, 2);
 
+% initial the best error to max value possible.
+best_error = realmax;
 
+for i = 1 : len 
+    for j = 1 : len
+        current_C = steps(i);
+        current_sigma = steps(j);
+        
+        model = svmTrain(X, y, current_C, @(x1, x2) gaussianKernel(x1, x2, current_sigma)); 
+        predictions = svmPredict(model, Xval);
+        
+        errors = mean(double(predictions ~= yval));
 
+        if errors < best_error
+            C = current_C;
+            sigma = current_sigma;
+            best_error = errors;
+        end
+    end
+end
 
 
 % =========================================================================
