@@ -52,7 +52,11 @@ J += lambda / 2 * sum(sum(X .^ 2));
 
 X_grad = error * Theta;
 
+X_grad += lambda * X;
+
 Theta_grad = error' * X;
+
+Theta_grad += lambda * Theta;
 
 
 % =============================================================
