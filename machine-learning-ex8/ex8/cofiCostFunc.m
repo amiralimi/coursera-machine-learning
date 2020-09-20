@@ -47,6 +47,9 @@ error(R == 0) = 0;
 square_error = error .^ 2;
 J = 1 / 2 * sum(sum(square_error));
 
+J += lambda / 2 * sum(sum(Theta .^ 2));
+J += lambda / 2 * sum(sum(X .^ 2));
+
 X_grad = error * Theta;
 
 Theta_grad = error' * X;
